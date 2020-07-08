@@ -35,7 +35,7 @@ msgid "Sign in ,then click JDCookie button.you will copy JD cookies, paste the c
 msgstr "登录后点击JDCookie 扩展工具复制cookie，然后粘贴到下面输入框中。"
 
 msgid "Auto Update Sign Service"
-msgstr "自动更新服务"
+msgstr "自动签到服务"
 
 msgid "Save Cookies And Start Services"
 msgstr "保存Cookie并启动服务"
