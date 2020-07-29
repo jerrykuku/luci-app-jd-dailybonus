@@ -6,10 +6,9 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=luci-app-jd-dailybonus
-LUCI_DEPENDS:=+node +node-request +coreutils-nohup +wget
 LUCI_PKGARCH:=all
-PKG_VERSION:=0.7.6
-PKG_RELEASE:=20200625
+PKG_VERSION:=0.8.2
+PKG_RELEASE:=20200719
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -19,7 +18,7 @@ define Package/luci-app-jd-dailybonus
 	SUBMENU:=3. Applications
 	TITLE:=Luci for JD dailybonus Script 
 	PKGARCH:=all
-	DEPENDS:=+node +node-request +coreutils-nohup +wget
+	DEPENDS:=+node +node-request +coreutils +coreutils-nohup +wget
 endef
 
 define Build/Prepare
@@ -47,8 +46,8 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 	( . /etc/uci-defaults/luci-jd-dailybonus ) && rm -f /etc/uci-defaults/luci-jd-dailybonus
 	rm -rf /tmp/luci-indexcache
 	rm -rf /tmp/luci-modulecache/*
-	chmod 755 /etc/init.d/jd-dailybonus >/dev/null 2>&1
-	chmod 755 /usr/share/jd-dailybonus/app.sh >/dev/null 2>&1
+	chmod +x /etc/init.d/jd-dailybonus >/dev/null 2>&1
+	chmod +x /usr/share/jd-dailybonus/newapp.sh >/dev/null 2>&1
 	/etc/init.d/jd-dailybonus enable >/dev/null 2>&1
 fi
 exit 0
