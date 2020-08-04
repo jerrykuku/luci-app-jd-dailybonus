@@ -139,19 +139,8 @@ update() {
     wget-ssl --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36" --no-check-certificate -t 3 -T 10 -q $REMOTE_SCRIPT -O $TEMP_SCRIPT
     if [ $? -ne 0 ]; then
         cancel "501"
-    fi
-    if [ $(expr $local_ver \< $remote_ver) -eq 1 ]; then
-        cp -r $TEMP_SCRIPT $JD_SCRIPT
-        fill_cookie
-        uci set jd-dailybonus.@global[0].version=$remote_ver
-        uci commit jd-dailybonus
-        cancel "0"
-    else
-       cp -r $TEMP_SCRIPT $JD_SCRIPT
-       fill_cookie
-       uci set jd-dailybonus.@global[0].version=$remote_ver
-       uci commit jd-dailybonus
-       cancel "0"
+     else
+        echo $remote_ver
     fi
 }
 
