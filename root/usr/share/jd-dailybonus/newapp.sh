@@ -82,8 +82,8 @@ local_ver=$(uci_get_by_type global version)
 
 add_cron() {
     sed -i '/jd-dailybonus/d' $CRON_FILE
-    [ $(uci_get_by_type global auto_run 0) -eq 1 ] && echo '5 '$(uci_get_by_type global auto_run_time)' * * * /bin/bash -c "sleep $[RANDOM % 180]s"; /usr/share/jd-dailybonus/newapp.sh -w' >>$CRON_FILE
-    [ $(uci_get_by_type global auto_update 0) -eq 1 ] && echo '1 '$(uci_get_by_type global auto_update_time)' * * * /usr/share/jd-dailybonus/newapp.sh -u' >>$CRON_FILE
+    [ $(uci_get_by_type global auto_run 0) -eq 1 ] && echo '2 '$(uci_get_by_type global auto_run_time)' * * * /bin/bash -c "sleep $[RANDOM % 180]s"; /usr/share/jd-dailybonus/newapp.sh -w' >>$CRON_FILE
+    [ $(uci_get_by_type global auto_update 0) -eq 1 ] && echo '20 '$(uci_get_by_type global auto_update_time)' * * * /usr/share/jd-dailybonus/newapp.sh -u' >>$CRON_FILE
     crontab $CRON_FILE
 }
 
@@ -147,7 +147,11 @@ update() {
         uci commit jd-dailybonus
         cancel "0"
     else
-        cancel "101"
+       cp -r $TEMP_SCRIPT $JD_SCRIPT
+       fill_cookie
+       uci set jd-dailybonus.@global[0].version=$remote_ver
+       uci commit jd-dailybonus
+       cancel "0"
     fi
 }
 
