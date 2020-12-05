@@ -87,7 +87,7 @@ add_cron() {
 serverchan() {
     sckey=$(uci_get_by_type global serverchan)
     failed=$(uci_get_by_type global failed)
-    desc=$(cat /www/JD_DailyBonus.htm | grep -E '签到号|签到概览|签到总计|账号总计|其他总计' | sed 's/$/&\n/g')
+    desc=$(cat /www/JD_DailyBonus.htm | grep -E '签到号|签到概览|签到奖励|其他奖励|账号总计|其他总计' | sed 's/$/&\n/g')
     serverurlflag=$(uci_get_by_type global serverurl)
     serverurl=https://sc.ftqq.com/
     if [ "$serverurlflag" = "sct" ]; then
@@ -110,11 +110,12 @@ run() {
     fill_cookie
     echo -e $(date '+%Y-%m-%d %H:%M:%S %A') >$LOG_HTM 2>/dev/null
     [ ! -f "/usr/bin/node" ] && echo -e "未安装node.js,请安装后再试!\nNode.js is not installed, please try again after installation!">>$LOG_HTM && exit 1
-    node $JD_SCRIPT >>$LOG_HTM 2>&1 &
+    node $JD_SCRIPT >>$LOG_HTM 2>/dev/null
 }
 
 back_run() {
     run
+    sleep 1s
     serverchan
 }
 
@@ -139,8 +140,7 @@ check_ver() {
     if [ $? -ne 0 ]; then
         cancel "501"
     else
-        remote_ver=$(get_ver $TEMP_SCRIPT)
-        echo $remote_ver
+        echo $(get_ver $TEMP_SCRIPT)
     fi
 }
 
