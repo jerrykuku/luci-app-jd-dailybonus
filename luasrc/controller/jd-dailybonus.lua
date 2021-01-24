@@ -33,20 +33,25 @@ function run()
 
     data.auto_run = data.auto_run ~= nil and data.auto_run or 0
     data.auto_update = data.auto_update ~= nil and data.auto_update or 0
+    data.cookie = data.cookie ~= nil and data.cookie or 0
+    data.cookie2 = data.cookie2 ~= nil and data.cookie2 or 0
     uci:tset('jd-dailybonus', '@global[0]', data)
     uci:commit('jd-dailybonus')
-    local json_data = {
-        CookieJD = data.cookie,
-        CookieJD2 = data.cookie2:len() == 0 and nil or data.cookie2,
-        JD_DailyBonusDelay = data.stop,
-        JD_DailyBonusTimeOut = data.out
-    }
-    write_json('/root/CookieSet.json', json_data)
-    write_json('/www/CookieSet.json', json_data)
-    luci.sys.call('/usr/share/jd-dailybonus/newapp.sh -r')
-    luci.sys.call('/usr/share/jd-dailybonus/newapp.sh -a')
-    e.error = 0
-
+    if data.cookie ~= "" then
+        local json_data = {
+            CookieJD = data.cookie,
+            CookieJD2 = data.cookie2:len() == 0 and nil or data.cookie2,
+            JD_DailyBonusDelay = data.stop,
+            JD_DailyBonusTimeOut = data.out
+        }
+        write_json('/root/CookieSet.json', json_data)
+        write_json('/www/CookieSet.json', json_data)
+        luci.sys.call('/usr/share/jd-dailybonus/newapp.sh -r')
+        luci.sys.call('/usr/share/jd-dailybonus/newapp.sh -a')
+        e.error = 0
+    else
+        e.error = 1
+    end
     luci.http.prepare_content('application/json')
     luci.http.write_json(e)
 end
