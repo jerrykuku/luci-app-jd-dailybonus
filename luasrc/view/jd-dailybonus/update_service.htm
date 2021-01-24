@@ -253,29 +253,38 @@ var jq=$.noConflict();
 	}
 	//保存订阅按钮
 	jq("#update_service").click(function () {
-		let prefix_array = jq(".cbi-input-text").eq(0).attr("id").split(".");
-        prefix_array.pop()
-		var prefix = prefix_array.join(".")+".";
-        let array = jq("form[name*='cbi'").serializeArray()
-        var json = {};
-        jq.each(array, function () {
-            if(this.name.indexOf(prefix) != -1){
-                let aname = this.name.replace(prefix, "");
-                if (json[aname]) {
-                    if (!json[aname].push) {
-                        json[aname] = [json[aname]];
-                    }
-                    json[aname].push(this.value || '');
-                } else {
-                    json[aname] = this.value || '';
-                }
-            }
-        });
-		jq.ajax({
+		prefix_array = $("#cbi-jd-dailybonus-global .cbi-section-node").attr("id").split("-");
+		prefix = prefix_array[prefix_array.length - 1];
+		//console.log(prefix);
+		if ($("[name='cbid.jd-dailybonus." + prefix + ".auto_update']").is(":checked")) {
+			var auto_update = "1";
+		} else {
+			var auto_update = "0";
+		}
+
+		if ($("[name='cbid.jd-dailybonus." + prefix + ".auto_run']").is(":checked")) {
+			var auto_run = "1";
+		} else {
+			var auto_run = "0";
+		}
+		var stop = $("[name='cbid.jd-dailybonus." + prefix + ".stop']").val();
+		var out = $("[name='cbid.jd-dailybonus." + prefix + ".out']").val();
+		var cookie = $("[name='cbid.jd-dailybonus." + prefix + ".cookie']").val();
+		var cookie2 = $("[name='cbid.jd-dailybonus." + prefix + ".cookie2']").val();
+		var data = {
+			auto_update: auto_update,
+			auto_run: auto_run,
+			cookie: cookie,
+			cookie2: cookie2,
+			stop: stop,
+			out: out
+		}
+		//console.log(data);
+		$.ajax({
 			type: "post",
 			url: SAVE_URL,
 			dataType: "json",
-			data: json,
+			data: data,
 			success: function (d) {
 				if (d.error == 0) {
 					update_service();
