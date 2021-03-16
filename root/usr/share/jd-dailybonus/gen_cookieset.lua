@@ -8,14 +8,13 @@ function write_json(file, content)
     f:close()
 end
 
-
 local data = {
     CookiesJD = {}, 
     JD_DailyBonusDelay = uci:get('jd-dailybonus', '@global[0]', 'stop'),
     JD_DailyBonusTimeOut = uci:get('jd-dailybonus', '@global[0]', 'out')
 }
 
-for i, v in pairs( uci:get('jd-dailybonus', '@global[0]', 'Cookies') ) do
+for i, v in pairs( uci:get('jd-dailybonus', '@global[0]', 'Cookies') or {} ) do
     table.insert(data.CookiesJD, {["cookie"]=v})
 end
 
