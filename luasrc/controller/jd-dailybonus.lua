@@ -6,7 +6,7 @@ function index()
         return
     end
 
-    entry({'admin', 'services', 'jd-dailybonus'}, alias('admin', 'services', 'jd-dailybonus', 'client'), _('京东签到'), 10).dependent = true -- 首页
+    entry({'admin', 'services', 'jd-dailybonus'}, alias('admin', 'services', 'jd-dailybonus', 'client'), _('京东签到服务'), 10).dependent = true -- 首页
     entry({'admin', 'services', 'jd-dailybonus', 'client'}, cbi('jd-dailybonus/client', {hidesavebtn = true, hideresetbtn = true}), _('客户端'), 10).leaf = true -- 基本设置
     entry({'admin', 'services', 'jd-dailybonus', 'log'}, form('jd-dailybonus/log'), _('日志'), 30).leaf = true -- 日志页面
     entry({'admin', 'services', 'jd-dailybonus', 'script'}, form('jd-dailybonus/script'), _('脚本查看'), 20).leaf = true -- 直接配置脚本
