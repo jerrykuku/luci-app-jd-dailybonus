@@ -1,54 +1,45 @@
 <%+cbi/valueheader%>
-<script src="https://cdn.jsdelivr.net/npm/qrcode_js@1.0.0/qrcode.min.js"></script>
 <style>
-    #qrcontainer {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        z-index: 5000;
+    .mask-box {
+        margin: 0.25rem;
+        z-index: 9999;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, .8);
-        text-align: center;
-        transition: all 0.3s;
-    }
-    #qrcontainer.hidden{
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    #qrcontainer .qframe {
-        background-color: #ffffff;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: #6D8A88 1px solid;
-        -webkit-box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.2);
-        box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.2);
-        position: relative;
-    }
-    #qrcontainer .qframe #refresh_qrcode{
-        width: 256px;
-        height: 256px;
         position: absolute;
-        background-color: rgba(0, 0, 0, 0.5);
-        left: 1rem;
-        top: 1rem;
+        background: rgba(255, 255, 255, .8) url('/luci-static/resources/icons/loading.gif') no-repeat center center;
+    }
+    .mask-box .code {
+        border: 1px solid #dee2e6;
+        padding: 0.5rem 0.5rem 0.1rem;
+        position: absolute;
+        text-align: center;
+        background: #fff;
+        border-radius: 0.25rem;
+    }
+    .mask-box .code canvas {
+        margin-top: 0.25rem;
+    }
+    .mask-box .code .link {
+        float: right;
+        margin: -1rem;
+        height: 1.5rem;
+        width: 1.5rem;
+        display: block;
+        overflow: hidden;
+        background: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9IndpZHRoOiAxZW07IGhlaWdodDog%0AMWVtO3ZlcnRpY2FsLWFsaWduOiBtaWRkbGU7ZmlsbDogI0NDQztvdmVyZmxv%0AdzogaGlkZGVuOyIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0i%0AMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9%0AIjU2NyI+PHBhdGggZD0iTTUxMiA2NEMyNjQuOTkyIDY0IDY0IDI2NC45NiA2%0ANCA1MTJzMjAwLjk2IDQ0OCA0NDggNDQ4YzI0Ny4wMDggMCA0NDgtMjAwLjk2%0AIDQ0OC00NDhTNzU5LjA0IDY0IDUxMiA2NHpNNjk0Ljc1MiA2NDkuOTg0YzEy%0ALjQ4IDEyLjU0NCAxMi40NDggMzIuNzY4LTAuMDY0IDQ1LjI0OC02LjI0IDYu%0AMjA4LTE0LjQgOS4zNDQtMjIuNTkyIDkuMzQ0LTguMjI0IDAtMTYuNDE2LTMu%0AMTM2LTIyLjY1Ni05LjQwOGwtMTM3LjYtMTM4LjAxNi0xMzguMDQ4IDEzNi41%0ANzZjLTYuMjQgNi4xNDQtMTQuMzY4IDkuMjQ4LTIyLjQ5NiA5LjI0OC04LjI1%0ANiAwLTE2LjQ4LTMuMTY4LTIyLjc1Mi05LjUwNC0xMi40MTYtMTIuNTc2LTEy%0ALjMyLTMyLjggMC4yNTYtNDUuMjQ4bDEzNy44ODgtMTM2LjM4NC0xMzcuMzc2%0ALTEzNy44MjRjLTEyLjQ4LTEyLjUxMi0xMi40NDgtMzIuNzY4IDAuMDY0LTQ1%0ALjI0OCAxMi41MTItMTIuNTEyIDMyLjczNi0xMi40NDggNDUuMjQ4IDAuMDY0%0AbDEzNy41NjggMTM3Ljk4NCAxMzguMDQ4LTEzNi41NzZjMTIuNTQ0LTEyLjQ0%0AOCAzMi44MzItMTIuMzIgNDUuMjQ4IDAuMjU2IDEyLjQ0OCAxMi41NzYgMTIu%0AMzIgMzIuODMyLTAuMjU2IDQ1LjI0OGwtMTM3Ljg4OCAxMzYuMzg0TDY5NC43%0ANTIgNjQ5Ljk4NHoiIHAtaWQ9IjU2OCI+PC9wYXRoPjwvc3ZnPiAK) no-repeat center center;
+        text-indent: -999em;
+    }
+    .mask-box .code .reload {
         color: #ffffff;
+        width: 150px;
+        height: 150px;
+        bottom: 0.5rem;
         display: flex;
-        justify-content: center;
+        position: absolute;
         align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
     }
-    #qrcontainer .qframe #refresh_qrcode.hidden{
-        opacity: 0;
-        visibility: hidden;
-    }
-    #qrcontainer .qframe #refresh_qrcode h3{
-        font-weight: normal;
-    }
-    #qrcontainer .qframe #refresh_qrcode .refresh{
+    .mask-box .code .reload div {
         display: block;
         background: #e4393c;
         width: 80px;
@@ -61,83 +52,100 @@
         text-decoration: none;
         cursor: pointer;
     }
-    #qrcontainer .qframe .info {
-        padding: 1rem 0 0 0;
-    }
 </style>
-<div id="qrcontainer" class="hidden">
-    <div class="qframe">
-        <div id="refresh_qrcode" class="hidden">
-            <div>
-                <h3>二维码已失效</h3>
-                <div class="refresh" onclick="get_code()">刷新</div>
-            </div>
-        </div>
-        <div id="qrcode"></div>
-        <div class="info">请使用京东手机APP扫码</div>
-    </div>
-</div>
-
+<script src="//cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
     const QRCODE_URL = '<%=luci.dispatcher.build_url("admin", "services", "jd-dailybonus","qrcode")%>';
     const CHECK_LOGIN_URL = '<%=luci.dispatcher.build_url("admin", "services", "jd-dailybonus","check_login")%>';
 
-    let ckid = 0;
-
-    //初始化二维码
-    try {
-        qrcode = new QRCode(document.getElementById("qrcode"),
-                {
-                    text: "sample",
-                    correctLevel: QRCode.CorrectLevel.L
-                });
-        $(document).ready(function(){
-            $("div[id$='-Cookies']").dblclick(function ( e ) {
-                if ( e.target.className == "cbi-input-text" ) {
-                    var index = $(e.target).attr("id");
-                    ckid  = index.substring(index.indexOf(".Cookies") + 9);
-                    get_code();
+    (function( $, document, undefined ) {
+        $(document).ready(function( $ ) {
+            // 点击事件
+            $('div[data-prefix$=".Cookies"]').on("click dblclick", function( e ) {
+                // 排除不同控件响应事件
+                if ( e.type == 'dblclick' && e.target.tagName == 'INPUT' ) {
+                    var input = $( e.target );
+                } else if ( e.type == 'click' && e.target.tagName == 'IMG' && /add/ig.test( e.target.src ) ) {
+                    var input = $( 'input:last', this );
+                } else {
+                    return false;
                 }
+
+                // 定义容器及变量
+                var mask, code, thread, section = input.parent('div');
+
+                // 遮罩层
+                if ( $( '.mask-box', section ).length <= 0 ) {
+                    mask = $('<div />', {
+                        css: {
+                            width: section.outerWidth(), 
+                            height: section.outerHeight()
+                        }, 
+                        class: 'mask-box'
+                    })
+                    section.prepend( mask );
+                }
+
+                // 获取二维码
+                var createCode = function() {
+                    XHR.get( QRCODE_URL, null, ( x, d ) => {
+                        if ( x.status != 200 ) {
+                            alert('网络离线状态无法使用二维码获取，请刷新后重试！');
+                            return false;
+                        }
+
+                        if ( $( '.code', mask ).length <= 0 ) {
+                            code = $('<div />', {
+                                css: {
+                                    bottom: $( 'input', section ).length >= 5 ? Math.max( 10, mask.outerHeight() - input.position().top ) : 0, 
+                                    left: mask.outerWidth()
+                                }, 
+                                text: '使用手机京东进行扫码', 
+                                class: 'code'
+                            }).prependTo( mask );
+                            code.prepend($('<a />', {
+                                text: '关闭', 
+                                href: 'javascript:void(0);', 
+                                click: function( e ) {
+                                    mask.remove();
+                                    clearInterval( thread );
+                                }, 
+                                class: 'link'
+                            }));
+                        }
+                        $( 'canvas, .reload', code ).remove();
+                        code.qrcode({
+                            text: d.qrcode_url, 
+                            width: 150, 
+                            height: 150, 
+                            correctLevel: 1
+                        });
+
+                        thread = setInterval(() => {
+                            $.post( CHECK_LOGIN_URL, { check_url: d.check_url }, function( data ) {
+                                if (data.error == 0) {
+                                    clearInterval( thread );
+                                    mask.remove();
+                                    input.val( data.cookie );
+                                } else if (data.error == 21 || data.error == 261) {
+                                    clearInterval( thread );
+                                        var canvas = $( 'canvas', code );
+                                        $('<div />', {
+                                            html: $('<div />', {
+                                                text: '刷新', 
+                                                click: createCode
+                                            }), 
+                                            class: 'reload'
+                                        }).prependTo( code );
+                                }
+                            }, "json");
+                        }, 3000);
+                    });
+                }();
+
+                return false;
             });
         });
-    } catch (error) {
-        alert("网络离线状态无法使用二维码获取Cookie，请刷新后重试！")
-        cookieBtn.forEach(e => {
-            e.disabled = true;
-        });
-    }
-
-    //获取二维码
-    function get_code(){
-        XHR.get(QRCODE_URL, null, (x,d) => {
-            document.getElementById("qrcontainer").classList.remove("hidden");
-            document.getElementById("refresh_qrcode").classList.add("hidden");
-            qrcode.clear();
-            qrcode.makeCode(d.qrcode_url);
-            checkLogin(d.check_url);
-        });
-        return false;
-    }
-
-    function checkLogin(check_url){
-        var timeId = setInterval(() => {
-            let cname = "cookie" + ckid
-            jQuery.post( CHECK_LOGIN_URL, { check_url:check_url,id: cname}, function( data ) {
-              if (data.error == 0) {
-                    clearInterval(timeId)
-                    $("#qrcontainer").addClass("hidden")
-                    $("#refresh_qrcode").addClass("hidden")
-                    let prefix_array = $(".cbi-input-text").eq(0).attr("id").split(".");
-                    prefix_array.pop()
-                    let prefix = prefix_array.join(".")+".";
-                    document.getElementById(prefix+ckid).value =data.cookie
-                } else if (data.error == 21 || data.error == 261) {
-                    clearInterval(timeId)
-                    $("#refresh_qrcode").removeClass("hidden")
-                }
-            }, "json");
-        }, 3000)
-    }
-
+    })( jQuery, document );
 </script>
 <%+cbi/valuefooter%>
