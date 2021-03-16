@@ -12,7 +12,8 @@ o = s:option(DummyValue, '', '')
 o.rawhtml = true
 o.template = 'jd-dailybonus/cookie_tools'
 
-o = s:option(DynamicList, "Cookies", translate("账号 Cookie 列表"))
+o = s:option(DynamicList, "Cookies", translate("京东 Cookie 列表"), translate("请加 Cookie 数据请点击“ + ”或双击文本框进行扫码认证！"))
+o.placeholder = '双击进行扫码认证'
 o.rmempty = false
 
 o = s:option(Value, 'stop', translate('延迟签到'))
